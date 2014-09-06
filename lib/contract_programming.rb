@@ -23,7 +23,7 @@ module ContractProgramming
           result = super *args, &bl
 
           if respond_to? post, true
-            send post, result, &bl
+            send post, result
             checklist.each{ |msg| raise ArgumentError, msg }.clear
           end
 

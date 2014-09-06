@@ -1,18 +1,13 @@
 class Ex
   extend ContractProgramming
-
-  contract def meth(num)
-    num.to_s
-  end
+  contract def meth(num); num.to_s end
 end
 
-describe 'common testing' do
+describe 'common using' do
   let(:ex){ Ex.new }
 
   context 'when check methods is not defined' do
-    it 'do nothing' do
-      expect(ex.meth 1).to eq '1'
-    end
+    it 'do nothing' do expect(ex.meth 1).to eq '1' end
   end
 
   context 'when check methods is defined' do
@@ -21,12 +16,12 @@ describe 'common testing' do
         def pre_meth(num)
           check_it 'must be a num', Fixnum === num
         end
-
         def post_meth(result)
           check_it 'must be a string', String === result
         end
       end
     end
+
     it 'succesfully implemented method with valid params' do
       expect(ex.meth 1).to eq '1'
     end
@@ -37,11 +32,23 @@ describe 'common testing' do
 
     it 'rails error when output not conform to contract' do
       class Ex
-        def meth(num)
-          num
-        end
+        def meth(num); num end
       end
       expect{ex.meth 1}.to raise_error ArgumentError, 'must be a string'
+    end
+
+    context 'when pre and post method not checking arg' do
+      before :all do
+        class Ex
+          def meth(num); num.to_s end
+          def pre_meth(num); end
+          def post_meth(res); end
+        end
+      end
+
+      it 'do nothing' do
+        expect(ex.meth 1).to eq '1'
+      end
     end
   end
 end
